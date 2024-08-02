@@ -11,6 +11,6 @@ app.get("/raktim", (req, res) => {
     res.send("Hello from Raktim!");
   });
 
-app.listen(process.env.Raktim, () => {
-  console.log(`Express server running at http://localhost:${process.env.Raktim}/`);
+app.listen(process.env.PORT, () => {
+  console.log(`Express server running at http://localhost:${process.env.PORT}/`);
 });
