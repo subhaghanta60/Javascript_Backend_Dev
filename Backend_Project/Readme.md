@@ -78,3 +78,20 @@
 
 
  ```
+
+ # HTTP  Standard Status Code
+
+ ```python
+> 1 xx : Informational
+
+> 2 xx : Sucess
+
+> 3 xx :  Redirection
+
+> 4 xx : Client Eror
+
+* 5 xx : Server Error
+
+
+
+ ```
