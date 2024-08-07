@@ -73,7 +73,7 @@
 
 > 4 xx : Client Eror
 
-* 5 xx : Server Error
+> 5 xx : Server Error
 
 
 
@@ -82,15 +82,34 @@
  # HTTP  Standard Status Code
 
  ```python
-> 1 xx : Informational
+> 100: Continue
 
-> 2 xx : Sucess
+> 102 : Processing
 
-> 3 xx :  Redirection
+> 200 :  Ok
 
-> 4 xx : Client Eror
+> 201 : Created
 
-* 5 xx : Server Error
+> 202 : accepted
+
+> 307 : Temporary Redirect
+
+> 308 : Permanent Redirect
+
+> 400 : Bad Request
+
+> 401 : Unauthorized
+
+> 402 : Payment Required
+
+> 404 : Not Found
+
+> 500 : Internal Server Error
+
+> 504 : Gateway Time Out
+
+
+
 
 
 
