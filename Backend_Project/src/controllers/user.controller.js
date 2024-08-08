@@ -38,7 +38,7 @@ const registerUser = asyncHandler( async (req,res) => {
         }
        // Check if User Already Exits :username, email
 
-       const existedUser = User.findOne({
+       const existedUser = await  User.findOne({
                 $or: [{ username }, { email }]
         })
         if(existedUser) {
@@ -48,7 +48,12 @@ const registerUser = asyncHandler( async (req,res) => {
         // Check for images,check for avator
 
         const avatarLocalPath = req.files?.avatar[0].path;
-        const coverImageLocalPath = req.files?.coverImage[0].path;
+        //const coverImageLocalPath = req.files?.coverImage[0].path;
+
+        let coverImageLocalPath;
+        if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+            coverImageLocalPath = req.files?.coverImage[0].path;
+        }
 
         if(!avatarLocalPath){
             throw new ApiError(400,"Avatar File Required")
@@ -79,7 +84,7 @@ const registerUser = asyncHandler( async (req,res) => {
             "-password -refreshToken"
         )
 
-        if(createdUser){
+        if(!createdUser){
             throw new ApiError(500, "Something Went Wrong While register the User")
         }
         console.log(createdUser);
@@ -88,10 +93,6 @@ const registerUser = asyncHandler( async (req,res) => {
         return res.status(201).json(
             new ApiResponse(200, createdUser, "User Registed succesfully")
         )
-
-
-
-
 
 })
 
