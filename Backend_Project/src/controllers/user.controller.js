@@ -330,6 +330,84 @@ const updateUserAvatar = asyncHandler(async(req,res)=> {
         new ApiResponse(200, user,"Avatar Updated Successfully")
     )
 
+});
+
+
+
+const getUserChannelProfile = asyncHandler(async(req,res)=> {
+
+    const {username} = req.params;
+    if(!username?.trim()){
+        throw new ApiError(400, "User Is missing");
+    }
+    
+   const Channel = await User.aggregate (
+        [
+            {
+                $match: {
+                    username: username?.toLowerCase()
+
+                }
+            },
+            {
+                $lookup: {
+                    from: "subcriptions",
+                    localField: "_id",
+                    foreignField: "channel",
+                    as:"Subscribers"
+                }
+            },
+            {
+                $lookup: {
+                    from: "subcriptions",
+                    localField: "_id",
+                    foreignField: "subscriber",
+                    as:"SubscribeTo"
+                }
+            },
+            {
+                $addFields: {
+                    subscribersCount: {
+                        $size:"$Subscribers"
+                    },
+                    channelsSubscribedToCount : {
+                        $size: "$SubscribeTo"
+                    },
+                    {
+                        isSubscribed : {
+                            $cond: {
+                                if: {$in: [req.user?._id,"$Subscribers.subscriber" ]},
+                                then: true,
+                                else:false
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    fullName: 1,
+                    userName: 1,
+                    subscribersCount: 1,
+                    channelsSubscribedToCount: 1,
+                    isSubscribed: 1,
+                    avatar: 1,
+                    coverImage: 1,
+                    email: 1
+                }
+            }
+        ])
+
+    if(!Channel?.length){
+        throw new ApiError(404, "Channel Does Not Exists")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, channel[0],"User Channel Fetch Successfully")
+    )
+
 })
 export {
     registerUser,
@@ -339,5 +417,6 @@ export {
     changeCurrentPassword,
     gerCurrentUser,
     updateAccountDetails,
-    updateUserAvatar
+    updateUserAvatar,
+    getUserChannelProfile
 }
