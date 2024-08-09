@@ -125,7 +125,9 @@ const loginUser = asyncHandler( async (req,res) => {
 
      const {email, username,password} = req.body
 
-     if(!(username || email)){
+     console.log(req.body);
+
+     if(! (username || email)){
         throw new ApiError(400, "Username or Password Is Required")
      }
 
@@ -147,14 +149,14 @@ const loginUser = asyncHandler( async (req,res) => {
 
     const {acessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
 
-    const loggedInUser = awaitUser.findById(user._id).seelct(" -password -refreshtoken ");
+    const loggedInUser = await User.findById(user._id).select(" -password -refreshtoken ");
 
     const options = {
         httpOnly: true,
         secure: true
     }
 
-    return res.statue(200)
+    return res.status(200)
     .cookie("accessToken",acessToken,options)
     .cookie("refreshToken",refreshToken,options)
     .cookie("user",loggedInUser,options)
@@ -178,11 +180,12 @@ const logoutUser = asyncHandler( async (req,res) => {
         req.user._id,
         {
             $set: {
-                     refreshToken: undefined
+                     refreshToken: undefined 
                 },
-                {
-                    new:true
-                },
+                
+        },
+        {
+            new:true  
         },
     )
     const options = {
