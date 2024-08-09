@@ -373,17 +373,19 @@ const getUserChannelProfile = asyncHandler(async(req,res)=> {
                     channelsSubscribedToCount : {
                         $size: "$SubscribeTo"
                     },
-                    {
-                        isSubscribed : {
+                    
+                    isSubscribed : {
                             $cond: {
                                 if: {$in: [req.user?._id,"$Subscribers.subscriber" ]},
                                 then: true,
                                 else:false
                             }
                         }
-                    }
+                    
                 }
             },
+
+
             {
                 $project: {
                     fullName: 1,
@@ -408,7 +410,8 @@ const getUserChannelProfile = asyncHandler(async(req,res)=> {
         new ApiResponse(200, channel[0],"User Channel Fetch Successfully")
     )
 
-})
+});
+
 export {
     registerUser,
     loginUser,
